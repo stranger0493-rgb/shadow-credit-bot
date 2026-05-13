@@ -3,6 +3,21 @@ from discord.ext import commands
 import sqlite3
 
 import os
+from flask import Flask
+from threading import Thread
+
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot is alive!"
+
+def run():
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
 TOKEN = os.getenv("TOKEN")
 
 intents = discord.Intents.default()
@@ -89,4 +104,5 @@ async def leaderboard(ctx):
 
     await ctx.send(msg)
 
+keep_alive()
 bot.run(TOKEN)
